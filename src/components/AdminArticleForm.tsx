@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MarkdownEditor } from '@/components/MarkdownEditor.tsx'
+import { Select } from '@/components/Select/index.tsx'
 import { useHeaderNav } from '@/hooks/useBlogData.ts'
 import { navLeaves } from '@/lib/nav.ts'
 import { paths } from '@/lib/paths.ts'
@@ -180,22 +181,17 @@ export function AdminArticleForm({
               <label htmlFor="nav_id" className={labelClass}>
                 分类
               </label>
-              <select
+              <Select
                 id="nav_id"
                 value={navId}
                 disabled={navLoading || categories.length === 0}
-                onChange={(event) => setNavId(event.target.value)}
-                className={fieldClass}
-              >
-                <option value="">
-                  {navLoading ? '分类加载中…' : '请选择分类'}
-                </option>
-                {categories.map((item: NavItem) => (
-                  <option key={item.nav_id} value={item.nav_id}>
-                    {item.title}
-                  </option>
-                ))}
-              </select>
+                placeholder={navLoading ? '分类加载中…' : '请选择分类'}
+                onChange={setNavId}
+                options={categories.map((item: NavItem) => ({
+                  value: String(item.nav_id),
+                  label: item.title,
+                }))}
+              />
               {fieldError.nav_id && (
                 <p className="mt-1.5 text-sm text-[#e5484d]">{fieldError.nav_id}</p>
               )}

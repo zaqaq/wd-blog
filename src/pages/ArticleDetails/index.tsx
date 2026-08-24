@@ -1,7 +1,11 @@
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ArticleMeta } from '@/components/ArticleMeta.tsx'
+import { CommentSection } from '@/components/CommentSection/index.tsx'
 import { MarkdownContent } from '@/components/MarkdownContent.tsx'
+import { PraiseBar } from '@/components/PraiseBar.tsx'
 import { QueryStatus } from '@/components/QueryStatus.tsx'
+import { ArticleDetailSkeleton } from '@/components/Skeleton/ArticleDetailSkeleton.tsx'
 import { useArticleDetails } from '@/hooks/useBlogData.ts'
 import { useOpenArticle } from '@/hooks/useOpenArticle.ts'
 import { paths } from '@/lib/paths.ts'
@@ -43,6 +47,15 @@ export default function ArticleDetailsPage() {
   const { data, loading, error, retry } = useArticleDetails(id)
   const { open } = useOpenArticle()
   const articleDetail = data?.articleDetail
+  const [commentCount, setCommentCount] = useState<number | null>(null)
+  const [praiseCount, setPraiseCount] = useState<number | null>(null)
+  const displayCommentCount = commentCount ?? articleDetail?.comment_count ?? 0
+  const displayPraiseCount = praiseCount ?? articleDetail?.praise_count ?? 0
+
+  useEffect(() => {
+    setCommentCount(null)
+    setPraiseCount(null)
+  }, [articleDetail?.id])
 
   const goBack = () => {
     if (location.key !== 'default') {
@@ -54,18 +67,23 @@ export default function ArticleDetailsPage() {
 
   return (
     <div className="overflow-hidden bg-white">
-      <div className="px-[15px] pt-3">
-        <button
-          type="button"
-          onClick={goBack}
-          className="inline-flex items-center text-sm text-[#666] transition hover:text-[#09f]"
-        >
-          <i className="iconfont iconarrow-left mr-1 text-[16px]" />
-          返回
-        </button>
-      </div>
+      <QueryStatus
+        loading={loading}
+        error={error}
+        retry={retry}
+        fallback={<ArticleDetailSkeleton />}
+      >
+        <div className="px-[15px] pt-3">
+          <button
+            type="button"
+            onClick={goBack}
+            className="inline-flex cursor-pointer items-center text-sm text-[#666] transition hover:text-[#09f]"
+          >
+            <i className="iconfont iconarrow-left mr-1 text-[16px]" />
+            返回
+          </button>
+        </div>
 
-      <QueryStatus loading={loading} error={error} retry={retry}>
         {articleDetail ? (
           <>
             <div className="px-[15px] pb-[15px]">
@@ -74,8 +92,12 @@ export default function ArticleDetailsPage() {
               </h1>
               <div className="flex justify-center overflow-hidden border-b border-[#F3F3F3] py-2.5">
                 <ArticleMeta
-                  article={articleDetail}
-                  className="flex text-[#999]"
+                  article={{
+                    ...articleDetail,
+                    comment_count: displayCommentCount,
+                    praise_count: displayPraiseCount,
+                  }}
+                  className="flex flex-nowrap items-center text-[#999]"
                 />
               </div>
             </div>
@@ -89,7 +111,7 @@ export default function ArticleDetailsPage() {
               </div>
             </div>
 
-            <div className="flex justify-between overflow-hidden border-t border-[#ccc] px-[15px] py-3">
+            <div className="flex min-h-[45px] items-center justify-between overflow-hidden border-t border-[#ccc] px-[15px] py-3">
               <NeighborLink
                 label="上一篇"
                 neighbor={data?.prev}
@@ -104,11 +126,18 @@ export default function ArticleDetailsPage() {
               />
             </div>
 
-            <div className="mt-5 flex h-[200px] items-center justify-center">
-              <p className="h-[200px] rounded-full bg-[#fd8c84] px-[30px] text-center text-base font-bold leading-[200px] text-white">
-                评论点赞暂未开放, 敬请期待 ~~~
-              </p>
-            </div>
+            <PraiseBar
+              articleId={articleDetail.id}
+              initialPraised={data?.praise?.praised ?? false}
+              initialCount={articleDetail.praise_count}
+              onPraiseCountChange={setPraiseCount}
+            />
+
+            <CommentSection
+              articleId={articleDetail.id}
+              commentCount={displayCommentCount}
+              onCommentCountChange={setCommentCount}
+            />
           </>
         ) : (
           <p className="p-8 text-center text-[#666]">文章不存在</p>

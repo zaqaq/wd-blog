@@ -7,6 +7,7 @@ import {
 import { fetchHeaderNav, fetchSideBar } from '@/api/nav.ts'
 import { useAsyncResource } from '@/hooks/useAsyncResource.ts'
 import { isPositiveIntString } from '@/lib/number.ts'
+import { getVisitorId } from '@/lib/visitor.ts'
 
 export function useArticleList(
   pageNum: number,
@@ -39,7 +40,7 @@ export function useSearchList(keyword: string, pageNum: number) {
 export function useArticleDetails(id: string | undefined) {
   const valid = isPositiveIntString(id)
   return useAsyncResource(
-    () => fetchArticleDetails(id ?? ''),
+    () => fetchArticleDetails(id ?? '', getVisitorId()),
     valid ? `article-details:${id}` : 'article-details:invalid',
     valid,
   )

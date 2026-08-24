@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { fetchAdminArticleDetail, updateArticle } from '@/api/article.ts'
 import { AdminArticleForm } from '@/components/AdminArticleForm.tsx'
 import { QueryStatus } from '@/components/QueryStatus.tsx'
+import { AdminArticleFormSkeleton } from '@/components/Skeleton/AdminArticleFormSkeleton.tsx'
 import { useAsyncResource } from '@/hooks/useAsyncResource.ts'
 import { getErrorMessage } from '@/lib/error.ts'
 import { isPositiveIntString } from '@/lib/number.ts'
@@ -45,7 +46,12 @@ export default function AdminArticleEditPage() {
   }
 
   return (
-    <QueryStatus loading={loading} error={error} retry={retry}>
+    <QueryStatus
+      loading={loading}
+      error={error}
+      retry={retry}
+      fallback={<AdminArticleFormSkeleton />}
+    >
       {data ? (
         <AdminArticleForm
           key={data.id}

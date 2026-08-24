@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { fetchMe } from '@/api/auth.ts'
+import { AdminArticlesSkeleton } from '@/components/Skeleton/AdminArticlesSkeleton.tsx'
 import { paths } from '@/lib/paths.ts'
 import { useAuthHydrated, useAuthStore } from '@/stores/authStore.ts'
 
@@ -39,7 +40,11 @@ export function RequireAuth() {
   }, [hydrated, hydrateFromMe, logout, token])
 
   if (!hydrated) {
-    return <p className="p-8 text-[#999]">加载中…</p>
+    return (
+      <div className="mx-auto box-border flex h-svh max-w-[1200px] flex-col px-4 pt-[78px] pb-6">
+        <AdminArticlesSkeleton />
+      </div>
+    )
   }
 
   if (!token) {
@@ -53,7 +58,11 @@ export function RequireAuth() {
   }
 
   if (!ready) {
-    return <p className="p-8 text-[#999]">加载中…</p>
+    return (
+      <div className="mx-auto box-border flex h-svh max-w-[1200px] flex-col px-4 pt-[78px] pb-6">
+        <AdminArticlesSkeleton />
+      </div>
+    )
   }
 
   return <Outlet />

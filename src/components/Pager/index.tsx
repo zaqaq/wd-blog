@@ -1,17 +1,12 @@
 import { useMemo } from 'react'
+import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  parsePageSize,
+} from '@/components/Pager/constants.ts'
+import { Select } from '@/components/Select/index.tsx'
 
-const PAGE_SIZE_ARROW = `url("data:image/svg+xml,${encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" fill="none"><path d="M1 1l4 4 4-4" stroke="#667085" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-)}")`
-export const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50, 100] as const
-export const DEFAULT_PAGE_SIZE = 20
-
-export function parsePageSize(value: string | null | undefined) {
-  const parsed = Number(value)
-  return (PAGE_SIZE_OPTIONS as readonly number[]).includes(parsed)
-    ? parsed
-    : DEFAULT_PAGE_SIZE
-}
+export { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS, parsePageSize }
 
 type PagerProps = {
   total: number
@@ -89,23 +84,15 @@ export function Pager({
       {onPageSizeChange && (
         <label className="mr-4 flex items-center gap-2 text-sm text-[#667085]">
           每页
-          <select
+          <Select
+            size="sm"
             value={pageSize}
-            onChange={(event) => onPageSizeChange(Number(event.target.value))}
-            className="h-8 appearance-none rounded-[3px] border border-[#ced3d9] bg-white pr-[14px] pl-2 text-sm text-[#333] outline-none transition hover:border-[#0099ff] focus:border-[#09f]"
-            style={{
-              backgroundImage: PAGE_SIZE_ARROW,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'right 3px center',
-              backgroundSize: '10px 6px',
-            }}
-          >
-            {PAGE_SIZE_OPTIONS.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
+            onChange={onPageSizeChange}
+            options={PAGE_SIZE_OPTIONS.map((size) => ({
+              value: size,
+              label: String(size),
+            }))}
+          />
           条
         </label>
       )}

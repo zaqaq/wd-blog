@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { ArticleList } from '@/components/ArticleList/index.tsx'
 import { Pager } from '@/components/Pager/index.tsx'
 import { QueryStatus } from '@/components/QueryStatus.tsx'
+import { ArticleListSkeleton } from '@/components/Skeleton/ArticleListSkeleton.tsx'
 import { useRestoreListScroll } from '@/hooks/useRestoreListScroll.ts'
 import type { Article } from '@/types/index.ts'
 
@@ -35,7 +36,12 @@ export function ArticleFeed({
   useRestoreListScroll(!loading && !error)
 
   return (
-    <QueryStatus loading={loading} error={error} retry={retry}>
+    <QueryStatus
+      loading={loading}
+      error={error}
+      retry={retry}
+      fallback={<ArticleListSkeleton />}
+    >
       {articleList.length === 0 && empty ? (
         empty
       ) : (

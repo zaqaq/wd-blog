@@ -5,6 +5,8 @@ export const paths = {
   adminLogin: '/admin/login',
   adminArticles: '/admin/articles',
   adminPublish: '/admin/publish',
+  adminSiteSettings: '/admin/site',
+  adminNav: '/admin/nav',
   adminArticleEdit(id: number | string) {
     return `/admin/articles/${id}/edit`
   },

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { HeaderMenuSkeleton } from '@/components/Skeleton/HeaderSkeleton.tsx'
 import { useHeaderNav } from '@/hooks/useBlogData.ts'
 import { paths } from '@/lib/paths.ts'
 import type { HeaderNav, NavItem } from '@/types/index.ts'
@@ -31,11 +32,15 @@ const sNavIcon: Record<number, Record<number, string>> = {
 
 export function HeaderMenu() {
   const navigate = useNavigate()
-  const { data } = useHeaderNav()
+  const { data, loading } = useHeaderNav()
   const navList = data ?? []
 
   const toCategory = (navId: number) => {
     navigate(paths.category(navId))
+  }
+
+  if (loading) {
+    return <HeaderMenuSkeleton />
   }
 
   return (

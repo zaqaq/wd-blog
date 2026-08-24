@@ -1,8 +1,10 @@
-import { useRef, useState, type ChangeEvent, type SubmitEvent } from 'react'
+import { useRef, useState, type ChangeEvent, type MouseEvent, type SubmitEvent } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { deleteArticle, fetchAdminArticleList } from '@/api/article.ts'
 import { DEFAULT_PAGE_SIZE, Pager, parsePageSize } from '@/components/Pager/index.tsx'
 import { QueryStatus } from '@/components/QueryStatus.tsx'
+import { useModal } from '@/components/Modal/index.tsx'
+import { AdminArticlesSkeleton } from '@/components/Skeleton/AdminArticlesSkeleton.tsx'
 import { useAsyncResource } from '@/hooks/useAsyncResource.ts'
 import { useHeaderNav } from '@/hooks/useBlogData.ts'
 import { useRestoreListScroll } from '@/hooks/useRestoreListScroll.ts'
@@ -14,6 +16,7 @@ import { paths } from '@/lib/paths.ts'
 import { saveScrollPosition } from '@/lib/scroll.ts'
 
 export default function AdminArticlesPage() {
+  const modal = useModal()
   const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = parsePositiveInt(searchParams.get('pageNum') ?? undefined)
   const pageSize = parsePageSize(searchParams.get('pageSize'))
@@ -59,8 +62,20 @@ export default function AdminArticlesPage() {
     }
   }
 
-  const handleDelete = async (id: number, title: string) => {
-    if (!window.confirm(`确定删除「${title}」？删除后无法恢复。`)) {
+  const handleDelete = async (
+    id: number,
+    title: string,
+    origin?: MouseEvent | HTMLElement,
+  ) => {
+    const confirmed = await modal.error({
+      title: '删除文章',
+      content: `确定删除「${title}」？删除后无法恢复。`,
+      confirmText: '删除',
+      showCancel: true,
+      maskClosable: false,
+      origin: origin ?? 'center',
+    })
+    if (!confirmed) {
       return
     }
     setActionError('')
@@ -123,7 +138,12 @@ export default function AdminArticlesPage() {
         </p>
       )}
 
-      <QueryStatus loading={loading} error={error} retry={retry}>
+      <QueryStatus
+        loading={loading}
+        error={error}
+        retry={retry}
+        fallback={<AdminArticlesSkeleton />}
+      >
         <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg bg-white shadow-[0_1px_3px_rgba(16,24,40,0.06)]">
           {articles.length === 0 ? (
             <p className="py-16 text-center text-[#888]">暂无文章</p>
@@ -192,7 +212,9 @@ export default function AdminArticlesPage() {
                           <button
                             type="button"
                             className="cursor-pointer text-[#e5484d] hover:underline"
-                            onClick={() => void handleDelete(item.id, item.title)}
+                            onClick={(event) =>
+                              void handleDelete(item.id, item.title, event)
+                            }
                           >
                             删除
                           </button>

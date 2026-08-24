@@ -26,6 +26,33 @@ export type ArticleDetailResponse = {
   articleDetail: Article
   next: ArticleNeighbor
   prev: ArticleNeighbor
+  praise?: { praised: boolean }
+}
+
+export type CommentReply = {
+  id: number
+  nickname: string
+  content: string
+  reply_to_nickname: string | null
+  created_at: string
+}
+
+export type Comment = CommentReply & {
+  replies: CommentReply[]
+}
+
+export type CommentListResponse = {
+  totalNum: number
+  commentList: Comment[]
+}
+
+export type CommentAddResponse = CommentReply & {
+  status: 'published' | 'pending' | 'hidden'
+}
+
+export type PraiseToggleResponse = {
+  praised: boolean
+  praise_count: number
 }
 
 export type NavItem = {
@@ -35,6 +62,17 @@ export type NavItem = {
 
 export type HeaderNav = NavItem & {
   sub_title: NavItem[]
+}
+
+export type AdminNavItem = {
+  id: number
+  parent_id: number
+  nav_id: number
+  title: string
+}
+
+export type AdminNavListResponse = {
+  navList: AdminNavItem[]
 }
 
 export type SideBarArticle = {
@@ -51,9 +89,17 @@ export type HotTag = {
 }
 
 export type SideBarResponse = {
+  intro: string
+  notice: string
   updateList: SideBarArticle[]
   rankList: SideBarArticle[]
   hotsTagList: HotTag[]
+}
+
+export type SiteProfileResponse = {
+  intro: string
+  notice: string
+  updated_at: string
 }
 
 export type UpdateReadResponse = {

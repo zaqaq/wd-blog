@@ -103,3 +103,76 @@ body {
 .md-editor-host .w-md-editor-text {
   font: 14px/1.6 Microsoft Yahei, Tahoma, Arial, sans-serif !important;
 }
+
+.modal-mask {
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.modal-mask-active {
+  opacity: 1;
+}
+
+.modal-panel {
+  opacity: 0;
+  transform: translate(var(--modal-ox, 0px), var(--modal-oy, 12px))
+    scale(var(--modal-scale, 0.96));
+  transition:
+    opacity 320ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.modal-panel-active {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-mask,
+  .modal-panel {
+    transition: none;
+  }
+}
+
+.select-panel-shell {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  border-radius: 6px;
+  border: 1px solid #dbe1ea;
+  background: white;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+  will-change: max-height, opacity;
+}
+
+.select-panel-shell-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.select-panel-shell-active {
+  max-height: var(--select-panel-height);
+  opacity: 1;
+  overflow: auto;
+  transition:
+    max-height 220ms cubic-bezier(0, 0, 0.2, 1),
+    opacity 180ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.select-panel-shell-closing {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 220ms cubic-bezier(0, 0, 0.2, 1),
+    opacity 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select-panel-shell-active,
+  .select-panel-shell-closing {
+    transition: none;
+  }
+}

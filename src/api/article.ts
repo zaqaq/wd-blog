@@ -4,6 +4,7 @@ import type {
   AdminArticleListResponse,
   ArticleDetailResponse,
   ArticleListResponse,
+  PraiseToggleResponse,
   PublishArticleInput,
   PublishArticleResponse,
   UpdateReadResponse,
@@ -16,8 +17,14 @@ export function fetchArticleList(pageNum: number, pageSize?: number) {
   })
 }
 
-export function fetchArticleDetails(id: string | number) {
-  return post<ArticleDetailResponse>('/article-details', { id })
+export function fetchArticleDetails(
+  id: string | number,
+  visitorId?: string,
+) {
+  return post<ArticleDetailResponse>('/article-details', {
+    id,
+    ...(visitorId ? { visitor_id: visitorId } : {}),
+  })
 }
 
 export function fetchCategoryList(navId: string, pageNum: number) {
@@ -30,6 +37,13 @@ export function fetchSearchList(key: string, pageNum: number) {
 
 export function updateRead(id: number) {
   return post<UpdateReadResponse>('/update-read', { id })
+}
+
+export function toggleArticlePraise(articleId: number, visitorId: string) {
+  return post<PraiseToggleResponse>('/article-praise/toggle', {
+    article_id: articleId,
+    visitor_id: visitorId,
+  })
 }
 
 export function publishArticle(input: PublishArticleInput) {

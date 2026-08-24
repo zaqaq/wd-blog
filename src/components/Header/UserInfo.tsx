@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { logout as logoutRequest } from '@/api/auth.ts'
 import visitor from '@/assets/images/visitor.png'
+import { HeaderUserSkeleton } from '@/components/Skeleton/HeaderSkeleton.tsx'
 import { paths } from '@/lib/paths.ts'
 import { useAuthHydrated, useAuthStore } from '@/stores/authStore.ts'
 
@@ -21,7 +22,11 @@ export function HeaderUserInfo() {
     void navigate(paths.home)
   }
 
-  if (!hydrated || !token || !user) {
+  if (!hydrated) {
+    return <HeaderUserSkeleton />
+  }
+
+  if (!token || !user) {
     return (
       <div className="ml-[30px] flex w-[160px] shrink-0 items-center">
         <p className="text-[17px] font-medium leading-[30px]">喵，欢迎来访</p>
