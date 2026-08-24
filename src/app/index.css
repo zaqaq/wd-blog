@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+body {
+  color: #333;
+  font: 14px/1.5 Microsoft Yahei, Tahoma, Arial, sans-serif;
+  background-color: #f5f7fa;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.markdown-contents h3 {
+  display: table;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 8px 40px 8px 8px;
+  border-left: 8px solid #67b0e4;
+  background-color: #e5f2ff;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 0 0 60px 0;
+}
+
+.markdown-contents p {
+  text-indent: 30px;
+  margin-bottom: 5px;
+}
+
+.markdown-contents ul {
+  padding-left: 75px;
+  margin-bottom: 10px;
+  list-style-type: disc;
+}
+
+.markdown-contents ol {
+  padding-left: 75px;
+  margin-bottom: 10px;
+  list-style-type: decimal;
+}
+
+.markdown-contents li p {
+  margin: 0;
+  text-indent: 0;
+}
+
+.markdown-contents ul li,
+.markdown-contents ol li {
+  padding: 3px 0;
+}
+
+.markdown-contents blockquote {
+  border-left: 8px solid rgba(102, 128, 153, 0.075);
+  background-color: rgba(102, 128, 153, 0.05);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 10px;
+}
+
+.markdown-contents pre {
+  max-height: 650px;
+  margin-left: 30px !important;
+}
+
+.markdown-contents pre::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.markdown-contents pre::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #c0c0c0;
+}
+
+.markdown-contents pre::-webkit-scrollbar-track {
+  display: none;
+}
+
+.md-editor-host .w-md-editor {
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.md-editor-host .w-md-editor-content {
+  flex: 1;
+  min-height: 0;
+  height: auto !important;
+}
+
+.md-editor-host .w-md-editor-input,
+.md-editor-host .w-md-editor-area {
+  height: 100%;
+  min-height: 100%;
+}
+
+.md-editor-host .w-md-editor-text {
+  min-height: 100% !important;
+  height: 100%;
+}
+
+.md-editor-host .w-md-editor-text-pre,
+.md-editor-host .w-md-editor-text-input,
+.md-editor-host .w-md-editor-text {
+  font: 14px/1.6 Microsoft Yahei, Tahoma, Arial, sans-serif !important;
+}
