@@ -3,6 +3,7 @@ import {
   fetchArticleList,
   fetchCategoryList,
   fetchSearchList,
+  fetchTagList,
 } from '@/api/article.ts'
 import { fetchHeaderNav, fetchSideBar } from '@/api/nav.ts'
 import { useAsyncResource } from '@/hooks/useAsyncResource.ts'
@@ -33,6 +34,15 @@ export function useSearchList(keyword: string, pageNum: number) {
   return useAsyncResource(
     () => fetchSearchList(keyword, pageNum),
     `search-list:${keyword}:${pageNum}`,
+    enabled,
+  )
+}
+
+export function useTagList(tag: string, pageNum: number) {
+  const enabled = tag.length > 0
+  return useAsyncResource(
+    () => fetchTagList(tag, pageNum),
+    `tag-list:${tag}:${pageNum}`,
     enabled,
   )
 }

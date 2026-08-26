@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom'
 import { ArticleMeta } from '@/components/ArticleMeta.tsx'
 import { useOpenArticle } from '@/hooks/useOpenArticle.ts'
+import { paths } from '@/lib/paths.ts'
 import type { Article } from '@/types/index.ts'
 import articleThumb from '@/assets/images/article-placeholder.svg'
 
@@ -43,9 +45,15 @@ export function ArticleList({ articleList }: ArticleListProps) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="mb-[15px]">
-                <span className="relative top-[-2px] mr-2.5 inline-block bg-[#09f] px-1.5 py-0.5 text-[13px] whitespace-nowrap text-white after:absolute after:top-1.5 after:right-[-4px] after:border-y-4 after:border-l-4 after:border-y-transparent after:border-l-[#09f] after:content-['']">
-                  {item.tag}
-                </span>
+                {item.tag ? (
+                  <Link
+                    to={paths.tag(item.tag)}
+                    className="relative top-[-2px] mr-2.5 inline-block bg-[#09f] px-1.5 py-0.5 text-[13px] whitespace-nowrap text-white after:absolute after:top-1.5 after:right-[-4px] after:border-y-4 after:border-l-4 after:border-y-transparent after:border-l-[#09f] after:content-['']"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    {item.tag}
+                  </Link>
+                ) : null}
                 <h2
                   className="inline-block cursor-pointer text-lg font-bold hover:text-[#f90]"
                   onClick={() => toArticleDetails(item.id)}

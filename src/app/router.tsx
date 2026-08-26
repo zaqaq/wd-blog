@@ -73,6 +73,13 @@ export const router = createBrowserRouter([
               AdminArticlesSkeleton,
             ),
           },
+          {
+            path: '/admin/tags',
+            ...lazyPage(
+              () => import('@/pages/admin/Tags/index.tsx'),
+              AdminArticlesSkeleton,
+            ),
+          },
         ],
       },
     ],
@@ -113,6 +120,13 @@ export const router = createBrowserRouter([
         path: 'category/:navId',
         ...lazyPage(
           () => import('@/pages/Category/index.tsx'),
+          ArticleListSkeleton,
+        ),
+      },
+      {
+        path: 'tag',
+        ...lazyPage(
+          () => import('@/pages/Tag/index.tsx'),
           ArticleListSkeleton,
         ),
       },

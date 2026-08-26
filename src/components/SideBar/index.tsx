@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorState } from '@/components/ErrorState.tsx'
 import { BlogIntroCard } from '@/components/SideBar/BlogIntroCard.tsx'
@@ -6,8 +6,13 @@ import { SideWidget } from '@/components/SideBar/SideWidget.tsx'
 import { SideBarSkeleton } from '@/components/Skeleton/SideBarSkeleton.tsx'
 import { useOpenArticle } from '@/hooks/useOpenArticle.ts'
 import { useSideBar } from '@/hooks/useBlogData.ts'
+import { useSidebarPinned } from '@/hooks/useSidebarPinned.ts'
 import { formatDate } from '@/lib/datetime.ts'
 import { paths } from '@/lib/paths.ts'
+import {
+  SIDEBAR_STICKY_OFFSET_PX,
+  pinnedSidebarMaxHeight,
+} from '@/lib/sidebar.ts'
 import type { HotTag, SideBarArticle } from '@/types/index.ts'
 import articleThumb from '@/assets/images/article-placeholder.svg'
 
@@ -24,22 +29,46 @@ const tagPalettes = [
 function SideBarView() {
   const { data, loading, error, retry } = useSideBar()
   const { open } = useOpenArticle()
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const introRef = useRef<HTMLDivElement>(null)
   const updateList = data?.updateList ?? []
   const rankList = data?.rankList ?? []
   const hotsTagList = data?.hotsTagList ?? []
+  const ready = Boolean(data && !loading && !error)
+  const { pinned, lockMinHeight } = useSidebarPinned(
+    scrollerRef,
+    introRef,
+    ready,
+  )
 
   return (
-    <aside className="w-[275px] shrink-0">
-      {!loading && !error && data && (
-        <BlogIntroCard intro={data.intro} notice={data.notice} />
-      )}
-
+    <aside
+      className="w-[275px] shrink-0"
+      style={lockMinHeight > 0 ? { minHeight: lockMinHeight } : undefined}
+    >
       {loading ? (
         <SideBarSkeleton />
       ) : error ? (
         <ErrorState message={error} onRetry={retry} />
       ) : (
-        <>
+        <div
+          ref={scrollerRef}
+          className={pinned ? 'sticky overflow-y-auto' : ''}
+          style={
+            pinned
+              ? {
+                  top: SIDEBAR_STICKY_OFFSET_PX,
+                  maxHeight: pinnedSidebarMaxHeight(SIDEBAR_STICKY_OFFSET_PX),
+                }
+              : undefined
+          }
+        >
+          {data ? (
+            <div ref={introRef} className="flex flex-col">
+              <BlogIntroCard intro={data.intro} notice={data.notice} />
+            </div>
+          ) : null}
+
           {updateList.length > 0 && (
             <SideWidget
               icon="iconzuijingengxin_huaban"
@@ -124,8 +153,8 @@ function SideBarView() {
                   const palette = tagPalettes[index % tagPalettes.length]
                   return (
                     <Link
-                      key={`${item.nav_id}-${item.tag}`}
-                      to={paths.category(item.nav_id)}
+                      key={item.tag}
+                      to={paths.tag(item.tag)}
                       style={{
                         borderColor: palette.border,
                         backgroundColor: palette.bg,
@@ -139,8 +168,8 @@ function SideBarView() {
                 })}
               </div>
             </SideWidget>
-          )}
-        </>
+            )}
+          </div>
       )}
     </aside>
   )

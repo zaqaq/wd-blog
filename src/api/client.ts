@@ -1,4 +1,5 @@
 import axios, { isAxiosError, type AxiosResponse } from 'axios'
+import { unwrapApiBody } from '@/lib/apiEnvelope.ts'
 import { paths } from '@/lib/paths.ts'
 import { useAuthStore } from '@/stores/authStore.ts'
 
@@ -17,7 +18,7 @@ http.interceptors.request.use((config) => {
 })
 
 http.interceptors.response.use(
-  (response: AxiosResponse) => response.data,
+  (response: AxiosResponse) => unwrapApiBody(response.data),
   (error: unknown) => {
     if (isAxiosError(error) && error.response?.status === 401) {
       const requestUrl = error.config?.url ?? ''
@@ -39,5 +40,9 @@ export function get<T>(url: string): Promise<T> {
 }
 
 export function post<T>(url: string, data?: unknown): Promise<T> {
+  return http.post(url, data) as Promise<T>
+}
+
+export function postForm<T>(url: string, data: FormData): Promise<T> {
   return http.post(url, data) as Promise<T>
 }

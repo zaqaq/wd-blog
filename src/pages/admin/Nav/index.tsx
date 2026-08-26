@@ -106,7 +106,6 @@ export default function AdminNavPage() {
     return map
   }, [navList])
 
-  const [actionError, setActionError] = useState('')
   const [formSession, setFormSession] = useState(0)
   const [formMode, setFormMode] = useState<NavFormMode | null>(null)
 
@@ -137,7 +136,6 @@ export default function AdminNavPage() {
           parent_id: Number(values.parent_id),
         })
       }
-      setActionError('')
       retry()
     } catch (err: unknown) {
       throw new Error(getErrorMessage(err))
@@ -160,15 +158,15 @@ export default function AdminNavPage() {
     if (!confirmed) {
       return
     }
-    setActionError('')
     try {
       await deleteNav(item.id)
       if (formMode?.type === 'edit' && formMode.item.id === item.id) {
         setFormMode(null)
       }
+      window.$message.success(`已删除${levelLabel}「${item.title}」`)
       retry()
     } catch (err: unknown) {
-      setActionError(getErrorMessage(err))
+      window.$message.error(getErrorMessage(err))
     }
   }
 
@@ -197,24 +195,18 @@ export default function AdminNavPage() {
         </div>
       </section>
 
-      {actionError && (
-        <p className="shrink-0 rounded-md bg-[#e5484d]/8 px-4 py-3 text-sm text-[#e5484d]">
-          {actionError}
-        </p>
-      )}
-
       <QueryStatus
         loading={loading}
         error={error}
         retry={retry}
         fallback={<AdminArticlesSkeleton />}
       >
-        <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg bg-white shadow-[0_1px_3px_rgba(16,24,40,0.06)]">
+        <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-[#efeff5] bg-white">
           {rows.length === 0 ? (
             <p className="py-16 text-center text-[#888]">暂无导航，请先新增</p>
           ) : (
             <div className="min-h-0 flex-1 overflow-auto">
-              <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+              <table className="admin-table w-full min-w-[560px] border-collapse text-left text-sm">
                 <thead className="bg-[#f7f9fc] text-[#667085]">
                   <tr>
                     <th className="px-5 py-3.5 font-medium">标题</th>
@@ -257,7 +249,7 @@ export default function AdminNavPage() {
                           </button>
                           <button
                             type="button"
-                            className="cursor-pointer text-[#e5484d] hover:underline"
+                            className="cursor-pointer text-[#09f] hover:underline"
                             onClick={(event) => void handleDelete(item, event)}
                           >
                             删除

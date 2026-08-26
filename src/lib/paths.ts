@@ -7,6 +7,7 @@ export const paths = {
   adminPublish: '/admin/publish',
   adminSiteSettings: '/admin/site',
   adminNav: '/admin/nav',
+  adminTags: '/admin/tags',
   adminArticleEdit(id: number | string) {
     return `/admin/articles/${id}/edit`
   },
@@ -32,5 +33,12 @@ export const paths = {
   category(navId: string | number, pageNum = 1) {
     const base = `/category/${navId}`
     return pageNum > 1 ? `${base}?pageNum=${pageNum}` : base
+  },
+  tag(tag: string, pageNum = 1) {
+    const params = new URLSearchParams({ tag })
+    if (pageNum > 1) {
+      params.set('pageNum', String(pageNum))
+    }
+    return `/tag?${params.toString()}`
   },
 }

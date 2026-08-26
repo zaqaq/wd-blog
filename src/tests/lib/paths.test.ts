@@ -7,6 +7,7 @@ describe('paths', () => {
     expect(paths.adminLogin).toBe('/admin/login')
     expect(paths.adminArticles).toBe('/admin/articles')
     expect(paths.adminNav).toBe('/admin/nav')
+    expect(paths.adminTags).toBe('/admin/tags')
   })
 
   it('文章与后台编辑', () => {
@@ -26,5 +27,7 @@ describe('paths', () => {
     expect(paths.search('react', 2)).toBe('/search?s=react&pageNum=2')
     expect(paths.category(101)).toBe('/category/101')
     expect(paths.category(101, 3)).toBe('/category/101?pageNum=3')
+    expect(paths.tag('React')).toBe('/tag?tag=React')
+    expect(paths.tag('React', 2)).toBe('/tag?tag=React&pageNum=2')
   })
 })

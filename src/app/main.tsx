@@ -2,12 +2,16 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { router } from '@/app/router.tsx'
+import { MessageHost, message } from '@/components/Message/index.tsx'
 import { ModalHost } from '@/components/Modal/index.tsx'
 import '@/app/index.css'
+
+window.$message = message
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
     <ModalHost />
+    <MessageHost />
   </StrictMode>,
 )

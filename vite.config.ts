@@ -21,6 +21,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (pathname) => pathname.replace(/^\/api/, ''),
       },
+      '/uploads': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
   },
   test: {

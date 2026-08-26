@@ -6,7 +6,10 @@ export function navLeaves(navList: HeaderNav[]) {
   )
 }
 
-export function findNavTitle(navList: HeaderNav[], navId: number) {
+export function findNavTitle(navList: HeaderNav[], navId: number | null) {
+  if (navId == null) {
+    return '—'
+  }
   return (
     navLeaves(navList).find((item) => item.nav_id === navId)?.title ??
     String(navId)

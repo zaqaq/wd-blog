@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { fetchAdminArticleDetail, updateArticle } from '@/api/article.ts'
+import {
+  fetchAdminArticleDetail,
+  publishArticle,
+  saveArticle,
+  updateArticle,
+} from '@/api/article.ts'
 import { AdminArticleForm } from '@/components/AdminArticleForm.tsx'
 import { QueryStatus } from '@/components/QueryStatus.tsx'
 import { AdminArticleFormSkeleton } from '@/components/Skeleton/AdminArticleFormSkeleton.tsx'
@@ -8,7 +13,7 @@ import { useAsyncResource } from '@/hooks/useAsyncResource.ts'
 import { getErrorMessage } from '@/lib/error.ts'
 import { isPositiveIntString } from '@/lib/number.ts'
 import { paths } from '@/lib/paths.ts'
-import type { PublishArticleInput } from '@/types/index.ts'
+import type { PublishArticleInput, SaveArticleInput } from '@/types/index.ts'
 
 export default function AdminArticleEditPage() {
   const navigate = useNavigate()
@@ -22,22 +27,53 @@ export default function AdminArticleEditPage() {
     valid,
   )
   const [submitting, setSubmitting] = useState(false)
+  const [savingDraft, setSavingDraft] = useState(false)
   const [submitError, setSubmitError] = useState('')
 
   if (!valid) {
     return <Navigate to={paths.adminArticles} replace />
   }
 
-  const handleSubmit = async (input: PublishArticleInput) => {
+  const goBack = () => {
+    if (location.key === 'default') {
+      void navigate(paths.adminArticles)
+      return
+    }
+    void navigate(-1)
+  }
+
+  const handleSaveDraft = async (input: SaveArticleInput) => {
+    setSavingDraft(true)
+    setSubmitError('')
+    try {
+      await saveArticle({ ...input, id: articleId })
+      retry()
+    } catch (err: unknown) {
+      setSubmitError(getErrorMessage(err))
+    } finally {
+      setSavingDraft(false)
+    }
+  }
+
+  const handlePublish = async (input: PublishArticleInput) => {
+    setSubmitting(true)
+    setSubmitError('')
+    try {
+      await publishArticle({ ...input, id: articleId })
+      goBack()
+    } catch (err: unknown) {
+      setSubmitError(getErrorMessage(err))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleUpdate = async (input: PublishArticleInput) => {
     setSubmitting(true)
     setSubmitError('')
     try {
       await updateArticle(articleId, input)
-      if (location.key === 'default') {
-        void navigate(paths.adminArticles)
-      } else {
-        void navigate(-1)
-      }
+      goBack()
     } catch (err: unknown) {
       setSubmitError(getErrorMessage(err))
     } finally {
@@ -55,18 +91,13 @@ export default function AdminArticleEditPage() {
       {data ? (
         <AdminArticleForm
           key={data.id}
-          mode="edit"
-          initial={{
-            title: data.title,
-            des: data.des ?? '',
-            content: data.content,
-            tag: data.tag ?? '',
-            nav_id: data.nav_id,
-            img_href: data.img_href ?? '',
-          }}
+          initial={data}
           submitting={submitting}
+          savingDraft={savingDraft}
           error={submitError}
-          onSubmit={handleSubmit}
+          onPublish={handlePublish}
+          onSaveDraft={handleSaveDraft}
+          onUpdate={handleUpdate}
         />
       ) : (
         <p className="bg-white p-8 text-center text-[#666]">文章不存在</p>

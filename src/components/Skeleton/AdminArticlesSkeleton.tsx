@@ -3,12 +3,12 @@ import { Bone } from '@/components/Skeleton/Bone.tsx'
 export function AdminArticlesSkeleton({ rows = 8 }: { rows?: number }) {
   return (
     <section
-      className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg bg-white shadow-[0_1px_3px_rgba(16,24,40,0.06)]"
+      className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-[#efeff5] bg-white"
       aria-busy
       aria-label="加载中"
     >
       <div className="shrink-0 bg-[#f7f9fc]">
-        <div className="flex w-full items-center px-5 py-3.5 text-sm text-[#667085]">
+        <div className="flex w-full items-center border-b border-[#efeff5] px-5 py-3.5 text-sm text-[#667085]">
           <span className="flex-1 font-medium">标题</span>
           <span className="w-28 px-3 font-medium">分类</span>
           <span className="w-24 px-3 font-medium">标签</span>
@@ -21,7 +21,7 @@ export function AdminArticlesSkeleton({ rows = 8 }: { rows?: number }) {
         {Array.from({ length: rows }, (_, index) => (
           <div
             key={index}
-            className="flex w-full items-center border-b border-[#f0f2f5] px-5 py-4"
+            className="flex w-full items-center border-b border-[#efeff5] px-5 py-4"
           >
             <div className="min-w-0 flex-1 space-y-2 pr-3">
               <Bone className="h-4 w-3/5" />
@@ -47,7 +47,7 @@ export function AdminArticlesSkeleton({ rows = 8 }: { rows?: number }) {
           </div>
         ))}
       </div>
-      <div className="flex shrink-0 justify-end gap-2 px-5 py-4 shadow-[0_-2px_8px_rgba(16,24,40,0.05)]">
+      <div className="flex shrink-0 justify-end gap-2 border-t border-[#efeff5] px-5 py-4">
         <Bone className="h-8 w-16" />
         <Bone className="h-8 w-8" />
         <Bone className="h-8 w-8" />

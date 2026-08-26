@@ -20,6 +20,9 @@ export function AdminHeader() {
           <NavLink to={paths.adminNav} className={navClass}>
             导航管理
           </NavLink>
+          <NavLink to={paths.adminTags} className={navClass}>
+            标签管理
+          </NavLink>
           <NavLink to={paths.adminSiteSettings} className={navClass}>
             站点设置
           </NavLink>

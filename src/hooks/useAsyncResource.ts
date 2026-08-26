@@ -53,5 +53,9 @@ export function useAsyncResource<T>(
     setVersion((value) => value + 1)
   }, [])
 
-  return { data, loading, error, retry }
+  const mutate = useCallback((updater: (current: T) => T) => {
+    setData((current) => (current == null ? current : updater(current)))
+  }, [])
+
+  return { data, loading, error, retry, mutate }
 }

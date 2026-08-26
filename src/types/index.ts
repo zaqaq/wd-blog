@@ -1,3 +1,5 @@
+export type ArticleStatus = 'draft' | 'published' | 'unpublished'
+
 export type Article = {
   id: number
   tag: string | null
@@ -117,21 +119,36 @@ export type LoginResponse = {
 }
 
 export type PublishArticleInput = {
+  id?: number
   title: string
   des: string
   content: string
-  tag: string
+  tags: string[]
   nav_id: number
+  img_href?: string
+  scheduled_at?: string
+}
+
+export type SaveArticleInput = {
+  id?: number
+  title: string
+  des?: string
+  content?: string
+  tags?: string[]
+  nav_id?: number
   img_href?: string
 }
 
-export type PublishArticleResponse = {
+export type ArticleWriteResponse = {
   id: number
   title: string
-  des: string
-  tag: string
-  nav_id: number
-  img_href?: string | null
+  des: string | null
+  tag: string | null
+  tags: string[]
+  nav_id: number | null
+  img_href: string | null
+  status: ArticleStatus
+  scheduled_at: string | null
   publish_date: string
 }
 
@@ -140,8 +157,11 @@ export type AdminArticle = {
   title: string
   des: string | null
   tag: string | null
-  nav_id: number
+  tags: string[]
+  nav_id: number | null
   img_href: string | null
+  status: ArticleStatus
+  scheduled_at: string | null
   publish_date: string
   comment_count: number
   read_count: number
@@ -156,4 +176,18 @@ export type AdminArticleDetail = AdminArticle & {
 export type AdminArticleListResponse = {
   totalNum: number
   articleList: AdminArticle[]
+}
+
+export type UploadImageResponse = {
+  url: string
+}
+
+export type AdminTag = {
+  id: number
+  name: string
+  count: number
+}
+
+export type AdminTagListResponse = {
+  tagList: AdminTag[]
 }

@@ -22,4 +22,8 @@ describe('findNavTitle', () => {
   it('未命中时返回 id 字符串', () => {
     expect(findNavTitle(navList, 999)).toBe('999')
   })
+
+  it('navId 为空时返回破折号', () => {
+    expect(findNavTitle(navList, null)).toBe('—')
+  })
 })
