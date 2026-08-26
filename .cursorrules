@@ -1,0 +1,3 @@
+When Cursor auto-generates a Git commit message for this repository, you MUST write it in Simplified Chinese (简体中文).
+
+Follow this repo's style: `type(scope): 中文说明` (e.g. feat/fix/refactor/style/chore). Keep a concise subject line; only add a short body when needed. Do not write the commit message in English.

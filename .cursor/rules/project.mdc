@@ -1,0 +1,24 @@
+---
+description: 项目目录约定与数据请求规范
+alwaysApply: true
+---
+
+# 技术栈与目录
+
+- React + Vite + TypeScript + Tailwind，包管理器用 pnpm。路径别名 `@/` 指向 `src/`。
+- 导入必须带扩展名：`@/api/nav.ts`、`@/components/QueryStatus.tsx`。
+- 页面 `src/pages/`，组件 `src/components/`，接口 `src/api/`，类型 `src/types/`，工具 `src/lib/`，hooks `src/hooks/`，单测 `src/tests/`。
+- 路由路径一律用 `src/lib/paths.ts` 的 `paths`，不要手写字符串。
+
+# 数据请求与错误处理
+
+- HTTP 只用 `src/api/client.ts` 的 `get` / `post`（baseURL `/api`）。业务接口写在 `src/api/*.ts`，返回已解包的 data。
+- 页面请求用 `useAsyncResource` 或 `src/hooks/useBlogData.ts`，不要自己再堆一套 loading / error。
+- 列表/详情加载态用 `<QueryStatus loading error retry fallback={Skeleton}>`。
+- 用户可见错误文案用 `getErrorMessage()`（`src/lib/error.ts`）。
+
+# 单测
+
+- 用 Vitest（`pnpm test`），文件放在 `src/tests/`，按源码路径镜像（如 `src/lib/error.ts` → `src/tests/lib/error.test.ts`）。
+- 只测无 UI、无网络、无副作用的纯逻辑；不测组件、页面和交互。
+- 改已覆盖的纯函数时同步改测试。UI 行为用浏览器验证。

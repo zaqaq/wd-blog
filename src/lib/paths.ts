@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_SIZE } from '@/components/Pager/index.tsx'
+import { DEFAULT_PAGE_SIZE } from '@/components/Pager/constants.ts'
 
 export const paths = {
   home: '/',
